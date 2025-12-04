@@ -47,3 +47,67 @@ GROUP BY Color, Size;
 SELECT Color, Name, COUNT(*)
 FROM Production.Product
 GROUP BY Color;
+
+USE RetailStoreDB
+
+SELECT Color, COUNT (*) AS Jumlah
+FROM Production.Product
+GROUP BY Color
+HAVING COUNT (*) > 20;
+
+SELECT Color, COUNT(*) AS Jumlah
+FROM Production.Product
+WHERE ListPrice > 500 -- Filter Baris (Step 2)
+GROUP BY Color -- Kelompokkan sisa baris (Step 3)
+HAVING COUNT(*) > 10; -- Filter hasil kelompok (Step 4)
+
+SELECT ProductID, SUM(OrderQty) AS TotalQty
+FROM Sales.SalesOrderDetail
+GROUP BY ProductID
+HAVING SUM(OrderQty) > 1000;
+
+SELECT SpecialOfferID, AVG(OrderQty) AS RataRataBeli
+FROM Sales.SalesOrderDetail
+GROUP BY SpecialOfferID
+HAVING AVG(OrderQty) < 2;
+
+SELECT Color
+FROM Production.Product
+GROUP BY Color
+HAVING MAX(ListPrice) > 3000;
+
+SELECT DISTINCT JobTitle
+FROM HumanResources.Employee;
+
+SELECT Name, ListPrice
+FROM Production.Product
+ORDER BY ListPrice DESC;
+
+SELECT TOP 5 Name, ListPrice
+FROM Production.Product
+ORDER BY ListPrice DESC;
+
+SELECT Name, ListPrice
+FROM Production.Product
+ORDER BY ListPrice DESC
+OFFSET 10 ROWS
+FETCH NEXT 5 ROWS ONLY;
+
+SELECT TOP 3 Color, SUM(ListPrice) AS TotalNilaiStok
+FROM Production.Product
+WHERE ListPrice > 0 -- Step 2: Filter Sampah
+GROUP BY Color -- Step 3: Kelompokkan
+ORDER BY TotalNilaiStok DESC; -- Step 6 Urutkan
+
+-- Ambil 10 Barang dari ProductID dan total uang yang didapat
+SELECT TOP 10 ProductID, SUM(LineTotal) AS TotalUlang
+-- Asalnya dari tabel sales
+FROM Sales.SalesOrderDetail
+-- Menghitung transaksi yang lebih dari 2
+WHERE OrderQty > 2
+-- Kelompokkan
+GROUP BY ProductID
+-- Filter pendapatan tertinggi
+HAVING SUM(LineTotal) > 50000
+-- Urutkan
+ORDER BY TotalUlang DESC;
